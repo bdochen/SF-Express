@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+import sys
+import requests
+import os
+import json
+import base64
+import re
+import time
+url = 'https://ucmp.sf-express.com/cx-wechat-query/query/waybill/queryWayBillByWaybillNo'
+headers = {
+    "Cookie": 'HSESSION=6552012e692e406e8172bb8072ffa9a7',
+    "Host": "ucmp.sf-express.com",
+    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36 MicroMessenger/6.5.2.501 NetType/WIFI WindowsWechat QBCore/3.43.901.400 QQBrowser/9.0.2524.400",
+    }
+sforder = []
+with open('sforder.txt', 'r') as f:
+    for l in f:
+         sforder.append(l.strip())
+    #    print(len(sforder))
+
+s0 = []
+s  = 0
+for p in sforder:
+    s0.append(p.strip())
+    p=s+1
+    print('当前单号：',s0[s])
+#   print(len(s0))
+#   print(type(s0))    
+    json_data = {"countryCode":"CN","langCode":"sc","mediaCode":"WEIXIN","systemCode":"ccsp","businessCode":"","waybillNos":s0[s:p]}
+    s1=requests.post(url, json=json_data, headers=headers)
+#   print(s1.status_code)
+#   print(s1.encoding)
+#   print (s1.text)
+    with open('result1.txt', 'a+', encoding='utf-8') as f:
+        f.write(s1.text)
+    with open('result2.txt', 'a+', encoding='utf-8') as f:
+        f.write('快递单号：'+ s0[0] +'\n')
+    results = re.findall('barScanDt":"(.*?)","barScanTm":"(.*?)","countryName":""(.*?)"remark":"(.*?)","routeCode', s1.text, re.S)
+    for result in results:
+        print(result[0].strip(),result[1].strip(),result[3].strip())
+        with open('result2.txt', 'a+', encoding='utf-8') as f:
+            f.write((result[0].strip()+' '+result[1].strip()+' '+result[3].strip())+'\n')
+    with open('result2.txt', 'a+', encoding='utf-8') as f:
+            f.write('\n')
+#   s0 = []
+    s = s+1
+    print('\n')
+    result =  []
+    time.sleep(1)
+print('*******所有单号查询完毕，感谢使用，有问题请联系bdo_chen@qq.com***********')
