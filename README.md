@@ -8,3 +8,6 @@ http://www.kuaidi100.com/query?type=baishiwuliu&postid=10000452423432&temp=0.754
 {"message":"ok","nu":"10000452423432","ischeck":"1","com":"baishiwuliu","status":"200","condition":"F00","state":"3","data":[{"time":"2019-04-23","context":"查无结果","ftime":"2019-04-23"}]}
 
 
+
+document.getElementsByClassName('context')[6].innerHTML="需要插入的String"
+
